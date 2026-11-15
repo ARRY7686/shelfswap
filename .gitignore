@@ -1,0 +1,5 @@
+# log files from the local server
+*.log
+
+# scratch folder, not part of the site
+temp/
