@@ -1,0 +1,126 @@
+Git commands I used for the ShelfSwap assignment
+================================================
+(in the same order I ran them)
+
+
+--- Step 1: setting up the repo ---
+
+git init -b main
+    Turns the shelfswap folder into a git repo. The -b main part names the
+    first branch "main" instead of the older default "master".
+
+git status
+    Shows which files are tracked, changed or untracked. I ran this a lot,
+    mostly to check things before committing.
+
+
+--- Step 2: commits, branching and merging ---
+
+git add index.html about.html
+    Stages the two files so they go into the next commit.
+
+git commit -m "Initial commit: home page and about page"
+    Saves the staged files as the first snapshot of the project, with a message.
+
+git status --short
+    Same as git status but one line per file. "M" next to a file means it was modified.
+
+git add index.html
+git commit -m "Add note on how to list a book"
+    Second commit, after I edited the home page.
+
+git branch feature
+    Creates a new branch called feature, starting from the current commit on main.
+    It does not switch to it.
+
+git checkout feature
+    Moves me onto the feature branch, so new commits go there and not on main.
+    (git switch feature does the same thing.)
+
+git add about.html
+git commit -m "Add how it works section to about page"
+    Commit made on the feature branch only. main does not have this change yet.
+
+git checkout main
+    Goes back to the main branch.
+
+git merge --no-ff feature -m "Merge feature branch into main"
+    Brings the feature branch's commit into main. Since main had no new commits,
+    git would normally just fast-forward. --no-ff forces a proper merge commit so
+    the branch actually shows up in the history.
+
+git log --oneline --graph --all
+    Short history, one line per commit, with a text graph showing where the
+    feature branch split off and joined back.
+
+git log
+    Full history with commit hashes, author, date and message.
+
+
+--- Step 3: .gitignore ---
+
+cat .gitignore
+    Prints the .gitignore file. It has two rules: *.log and temp/
+
+git add .gitignore
+git commit -m "Add .gitignore for log files and temp folder"
+    Commits the ignore rules. After this, server.log and temp/ never show up
+    in git status even though they exist in the folder.
+
+git check-ignore -v server.log temp/draft.txt
+    Tells you which line of .gitignore is ignoring a file. Good way to prove
+    the rules are working.
+
+
+--- Step 4: undoing a commit ---
+
+git add index.html
+git commit -m "Add next swap day to home page"
+    The extra commit that I then undo.
+
+git log --oneline -3
+    Last three commits only.
+
+git show --stat HEAD
+    Details of the latest commit and which files it touched.
+
+git revert HEAD --no-edit
+    Undoes the last commit by creating a new commit that does the opposite.
+    I used revert instead of reset because the history is going on GitHub,
+    and revert does not delete or rewrite any commit. --no-edit just keeps
+    the default message instead of opening an editor.
+
+git show HEAD
+    Shows the revert commit's diff. The line added in the previous commit is
+    removed here.
+
+git diff HEAD~2 HEAD --stat
+    Compares the project before the extra commit with the project after the
+    revert. No output means the files are exactly the same as before.
+
+
+--- Step 5: pushing to GitHub ---
+
+(Created an empty public repo named shelfswap on github.com first, with no
+README, so it would not clash with my local history.)
+
+git remote add origin https://github.com/ARRY7686/shelfswap.git
+    Links my local repo to the GitHub repo and calls that link "origin".
+
+git remote -v
+    Lists the remotes, to check the URL is right.
+
+git push -u origin main
+    Uploads main and all its history to GitHub. -u sets origin/main as the
+    upstream, so later I can just type git push.
+
+git push origin feature
+    Pushes the feature branch too, so it is visible on GitHub as well.
+
+
+--- Step 6: this file ---
+
+git add git_commands.txt
+git commit -m "Add git_commands.txt with the commands used"
+git push
+    Adds this file to the repo and pushes it.
